@@ -1,0 +1,67 @@
+---
+title: "getting_and_cleaning_data_project"
+author: "sean_sebry"
+date: "10/31/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r readme}
+
+##Start:
+#eda, opened the test in notepad++, say it was tab delimited
+
+```
+
+```{r codebook}
+
+
+
+```
+
+```{r notes}
+
+#Resource: https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
+
+```
+
+```{r run_analysis.R}
+
+
+x_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/X_test.txt",col_names = FALSE)
+head(x_test_df)
+dim(x_test_df)
+name_for_x_test <- as.vector(read_lines("/cloud/project/UCI HAR Dataset/features.txt"))
+name_for_x_test
+head(name_for_x_test)
+dim(name_for_x_test)
+colnames(x_test_df)<- name_for_x_test
+head(x_test_df)
+
+
+
+
+y_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/y_test.txt",col_names = FALSE)
+
+colnames(y_test_df)<- "y_test"
+head(y_test_df)
+dim(y_test_df)
+
+subject_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/subject_test.txt",col_names = FALSE)
+colnames(subject_test_df)<- "subject_test"
+head(subject_test_df)
+dim(subject_test_df)
+
+comb_test_df <- cbind.data.frame(subject_test_df,y_test_df,x_test_df)
+head(comb_test_df)
+dim(comb_test_df)
+
+
+
+
+
+
+```
