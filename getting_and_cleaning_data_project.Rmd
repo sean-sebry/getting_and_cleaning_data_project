@@ -28,20 +28,20 @@ knitr::opts_chunk$set(echo = TRUE)
 #Resource: https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
 
 ## Review criteria
-# The submitted data set is tidy.
-# The Github repo contains the required scripts.
+# The submitted data set is tidy. DONE
+# The Github repo contains the required scripts. 
 # GitHub contains a code book that modifies and updates the available codebooks with the data to indicate all the variables and summaries calculated, along with units, and any other relevant information.
 # The README that explains the analysis files is clear and understandable.
-# The work submitted for this project is the work of the student who submitted it.
+# The work submitted for this project is the work of the student who submitted it. DONE
 
 
 ##You should create one R script called run_analysis.R that does the following.
 # 
 # Merges the training and the test sets to create one data set. DONE
-# Extracts only the measurements on the mean and standard deviation for each measurement.
+# Extracts only the measurements on the mean and standard deviation for each measurement. DONE
 # Uses descriptive activity names to name the activities in the data set DONE
 # Appropriately labels the data set with descriptive variable names. DONE
-# From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+# From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject. DONE
 
 ```
 
@@ -92,7 +92,26 @@ tidy_treatment_2_data_set <- tidy_treatment_1_data_set %>%
 glimpse(tidy_treatment_2_data_set)
 
 
-tidy_treament_3_data_set <- tidy_treatment_2_data_set %>% select_if(grepl("[sS]td|[mM]ean",colnames(tidy_treatment_2_data_set)))
+tidy_treament_3_data_set <- tidy_treatment_2_data_set %>% 
+  select_if(grepl("[sS]td|[mM]ean",colnames(tidy_treatment_2_data_set)))
 glimpse(tidy_treament_3_data_set)
+
+#tidied and final data set
+tidy_data_set_final <- as.data.frame(cbind(tidy_treatment_2_data_set[,1:2],tidy_treament_3_data_set))
+
+
+#final analysis summary
+analysis <- group_by(tidy_data_set_final, y_activity, subject)
+summary <- as.data.frame(summarize_all(analysis, mean))
+
+#project deliverables
+glimpse(tidy_data_set_final)
+head(summary)
+
+write_delim(summary,"summary_by_activity_and_subject_final.txt")
+write_delim(tidy_data_set_final, "tidy_data_set_final.txt")
+write_csv(summary,"summary_by_activity_and_subject_final.csv")
+write_csv(tidy_data_set_final, "tidy_data_set_final.csv")
+
 
 ```
