@@ -111,7 +111,9 @@ dim(subject_train_df)
 comb_train_df <- cbind.data.frame(subject_train_df,y_train_df,x_train_df)
 head(comb_train_df)
 dim(comb_train_df)
-colnames(comb_train_df)
+
+
+
 
 
 #combine for tidy data set
@@ -119,13 +121,34 @@ dim(comb_test_df)
 dim(comb_train_df)
 
 tidy_full_data_set <- rbind(comb_test_df, comb_train_df)
+head(tidy_full_data_set)
+names <- colnames(tidy_full_data_set)
+unique(names)#Seems to have duplicats
+select_unique<-!duplicated(names)
+select_unique
+
+tidy_treated_data_set <- tidy_full_data_set[,select_unique==TRUE]
+dim(tidy_treated_data_set)
+head(tidy_treated_data_set)
 
 
-#Apply activity labels
+
 activity_labels <- read_table(file = "/cloud/project/UCI HAR Dataset/activity_labels.txt",col_names = FALSE)
-
-
 activity_labels
+
+as.character(activity_labels[1, 2])
+
+tidy_treated_data_set <- tidy_treated_data_set %>%
+  rename(y_activity = y) %>% 
+  mutate(y_activity = case_when(
+  y_activity == 1 ~ as.character(activity_labels[1, 2]),
+  y_activity == 2 ~ as.character(activity_labels[2, 2]),
+  y_activity == 3 ~ as.character(activity_labels[3, 2]),
+  y_activity == 4 ~ as.character(activity_labels[4, 2]),
+  y_activity == 5 ~ as.character(activity_labels[5, 2]),
+  y_activity == 6 ~ as.character(activity_labels[6, 2])))
+glimpse(tidy_treated_data_set)
+
 
 
 
