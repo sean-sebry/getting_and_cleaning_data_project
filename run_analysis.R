@@ -49,16 +49,18 @@ tidy_treament_3_data_set <- tidy_treatment_2_data_set %>%
 glimpse(tidy_treament_3_data_set)
 
 #tidied and final data set
-tidy_data_set_final <- cbind(tidy_treatment_2_data_set[,1:2],tidy_treament_3_data_set)
+tidy_data_set_final <- as.data.frame(cbind(tidy_treatment_2_data_set[,1:2],tidy_treament_3_data_set))
 
 
 #final analysis summary
 analysis <- group_by(tidy_data_set_final, y_activity, subject)
-summary <- summarize_all(analysis, mean)
+summary <- as.data.frame(summarize_all(analysis, mean))
 
 #project deliverables
 glimpse(tidy_data_set_final)
 head(summary)
-getwd()
+
 write_delim(summary,"summary_by_activity_and_subject_final.txt")
 write_delim(tidy_data_set_final, "tidy_data_set_final.txt")
+write_csv(summary,"summary_by_activity_and_subject_final.csv")
+write_csv(tidy_data_set_final, "tidy_data_set_final.csv")

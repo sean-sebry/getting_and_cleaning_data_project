@@ -7,19 +7,13 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
 ```
 
 ```{r readme}
 
-##Start:
-#eda, opened the test in notepad++, saw it was tab delimited
-
 ```
 
 ```{r codebook}
-
-
 
 ```
 
