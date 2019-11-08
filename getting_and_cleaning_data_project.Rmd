@@ -27,19 +27,30 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Resource: https://thoughtfulbloke.wordpress.com/2015/09/09/getting-and-cleaning-the-assignment/
 
-##Review criteria
+## Review criteria
 # The submitted data set is tidy.
 # The Github repo contains the required scripts.
 # GitHub contains a code book that modifies and updates the available codebooks with the data to indicate all the variables and summaries calculated, along with units, and any other relevant information.
 # The README that explains the analysis files is clear and understandable.
 # The work submitted for this project is the work of the student who submitted it.
 
+
+##You should create one R script called run_analysis.R that does the following.
+# 
+# Merges the training and the test sets to create one data set. DONE
+# Extracts only the measurements on the mean and standard deviation for each measurement.
+# Uses descriptive activity names to name the activities in the data set
+# Appropriately labels the data set with descriptive variable names. DONE
+# From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
 ```
 
-```{r run_analysis.R}
+```{r Merges the training and the test sets to create one data set.}
 library(dplyr)
 library(readr)
+library(tibble)
 
+#test data set
 x_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/X_test.txt",col_names = FALSE)
 head(x_test_df)
 dim(x_test_df)
@@ -51,17 +62,14 @@ dim(name_for_x_test)
 colnames(x_test_df)<- name_for_x_test$X2
 head(x_test_df)
 
-
-
-
 y_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/y_test.txt",col_names = FALSE)
 
-colnames(y_test_df)<- "y_test"
+colnames(y_test_df)<- "y"
 head(y_test_df)
 dim(y_test_df)
 
 subject_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/subject_test.txt",col_names = FALSE)
-colnames(subject_test_df)<- "subject_test"
+colnames(subject_test_df)<- "subject"
 head(subject_test_df)
 dim(subject_test_df)
 
@@ -72,6 +80,52 @@ colnames(comb_test_df)
 
 
 
+
+
+#train data set
+x_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/X_train.txt",col_names = FALSE)
+head(x_train_df)
+dim(x_train_df)
+
+name_for_x_train <- read_delim("/cloud/project/UCI HAR Dataset/features.txt"," ",col_names = FALSE)
+name_for_x_train
+head(name_for_x_train)
+dim(name_for_x_train)
+colnames(x_train_df)<- name_for_x_train$X2
+head(x_train_df)
+
+
+
+
+y_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/y_train.txt",col_names = FALSE)
+
+colnames(y_train_df)<- "y"
+head(y_train_df)
+dim(y_train_df)
+
+subject_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/subject_train.txt",col_names = FALSE)
+colnames(subject_train_df)<- "subject"
+head(subject_train_df)
+dim(subject_train_df)
+
+comb_train_df <- cbind.data.frame(subject_train_df,y_train_df,x_train_df)
+head(comb_train_df)
+dim(comb_train_df)
+colnames(comb_train_df)
+
+
+#combine for tidy data set
+dim(comb_test_df)
+dim(comb_train_df)
+
+tidy_full_data_set <- rbind(comb_test_df, comb_train_df)
+
+
+#Apply activity labels
+activity_labels <- read_table(file = "/cloud/project/UCI HAR Dataset/activity_labels.txt",col_names = FALSE)
+
+
+activity_labels
 
 
 
