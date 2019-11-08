@@ -65,3 +65,5 @@ write_delim(summary,"summary_by_activity_and_subject_final.txt")
 write_delim(tidy_data_set_final, "tidy_data_set_final.txt")
 write_csv(summary,"summary_by_activity_and_subject_final.csv")
 write_csv(tidy_data_set_final, "tidy_data_set_final.csv")
+
+write.table(summary, "assignment_submission.txt", row.names = FALSE)
