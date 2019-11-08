@@ -39,117 +39,60 @@ knitr::opts_chunk$set(echo = TRUE)
 # 
 # Merges the training and the test sets to create one data set. DONE
 # Extracts only the measurements on the mean and standard deviation for each measurement.
-# Uses descriptive activity names to name the activities in the data set
+# Uses descriptive activity names to name the activities in the data set DONE
 # Appropriately labels the data set with descriptive variable names. DONE
 # From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
 ```
 
-```{r Merges the training and the test sets to create one data set.}
+```{r run_analysis}
 library(dplyr)
 library(readr)
 library(tibble)
 
 #test data set
 x_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/X_test.txt",col_names = FALSE)
-head(x_test_df)
-dim(x_test_df)
-
 name_for_x_test <- read_delim("/cloud/project/UCI HAR Dataset/features.txt"," ",col_names = FALSE)
-name_for_x_test
-head(name_for_x_test)
-dim(name_for_x_test)
 colnames(x_test_df)<- name_for_x_test$X2
-head(x_test_df)
-
 y_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/y_test.txt",col_names = FALSE)
-
 colnames(y_test_df)<- "y"
-head(y_test_df)
-dim(y_test_df)
-
 subject_test_df <- read_table(file = "/cloud/project/UCI HAR Dataset/test/subject_test.txt",col_names = FALSE)
 colnames(subject_test_df)<- "subject"
-head(subject_test_df)
-dim(subject_test_df)
-
 comb_test_df <- cbind.data.frame(subject_test_df,y_test_df,x_test_df)
-head(comb_test_df)
-dim(comb_test_df)
-colnames(comb_test_df)
-
-
-
-
 
 #train data set
 x_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/X_train.txt",col_names = FALSE)
-head(x_train_df)
-dim(x_train_df)
-
 name_for_x_train <- read_delim("/cloud/project/UCI HAR Dataset/features.txt"," ",col_names = FALSE)
-name_for_x_train
-head(name_for_x_train)
-dim(name_for_x_train)
 colnames(x_train_df)<- name_for_x_train$X2
-head(x_train_df)
-
-
-
-
 y_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/y_train.txt",col_names = FALSE)
-
 colnames(y_train_df)<- "y"
-head(y_train_df)
-dim(y_train_df)
-
 subject_train_df <- read_table(file = "/cloud/project/UCI HAR Dataset/train/subject_train.txt",col_names = FALSE)
 colnames(subject_train_df)<- "subject"
-head(subject_train_df)
-dim(subject_train_df)
-
 comb_train_df <- cbind.data.frame(subject_train_df,y_train_df,x_train_df)
-head(comb_train_df)
-dim(comb_train_df)
-
-
-
-
 
 #combine for tidy data set
-dim(comb_test_df)
-dim(comb_train_df)
-
 tidy_full_data_set <- rbind(comb_test_df, comb_train_df)
-head(tidy_full_data_set)
+
+
+#eda and treating of dataset
 names <- colnames(tidy_full_data_set)
-unique(names)#Seems to have duplicats
 select_unique<-!duplicated(names)
-select_unique
+tidy_treatment_1_data_set <- as.data.frame(tidy_full_data_set[,select_unique==TRUE])#removing duplicate columns
+tidy_treatment_1_data_set <- tidy_treatment_1_data_set %>% rename(y_activity = y)#adding a more descriptive name to 'y'
+activity_labels <- read_table(file = "/cloud/project/UCI HAR Dataset/activity_labels.txt",col_names = FALSE)#bringing in activity labels
 
-tidy_treated_data_set <- tidy_full_data_set[,select_unique==TRUE]
-dim(tidy_treated_data_set)
-head(tidy_treated_data_set)
-
-
-
-activity_labels <- read_table(file = "/cloud/project/UCI HAR Dataset/activity_labels.txt",col_names = FALSE)
-activity_labels
-
-as.character(activity_labels[1, 2])
-
-tidy_treated_data_set <- tidy_treated_data_set %>%
-  rename(y_activity = y) %>% 
+tidy_treatment_2_data_set <- tidy_treatment_1_data_set %>%
   mutate(y_activity = case_when(
-  y_activity == 1 ~ as.character(activity_labels[1, 2]),
-  y_activity == 2 ~ as.character(activity_labels[2, 2]),
-  y_activity == 3 ~ as.character(activity_labels[3, 2]),
-  y_activity == 4 ~ as.character(activity_labels[4, 2]),
-  y_activity == 5 ~ as.character(activity_labels[5, 2]),
-  y_activity == 6 ~ as.character(activity_labels[6, 2])))
-glimpse(tidy_treated_data_set)
+    y_activity == 1 ~ as.character(activity_labels[1, 2]),
+    y_activity == 2 ~ as.character(activity_labels[2, 2]),
+    y_activity == 3 ~ as.character(activity_labels[3, 2]),
+    y_activity == 4 ~ as.character(activity_labels[4, 2]),
+    y_activity == 5 ~ as.character(activity_labels[5, 2]),
+    y_activity == 6 ~ as.character(activity_labels[6, 2])))
+glimpse(tidy_treatment_2_data_set)
 
 
-
+tidy_treament_3_data_set <- tidy_treatment_2_data_set %>% select_if(grepl("[sS]td|[mM]ean",colnames(tidy_treatment_2_data_set)))
+glimpse(tidy_treament_3_data_set)
 
 ```
